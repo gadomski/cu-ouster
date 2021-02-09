@@ -4,7 +4,7 @@ import Dashboard from './Dashboard';
 import Sidebar from './Sidebar';
 
 import { useState, useEffect } from 'react';
-import Navbar from 'react-bootstrap/Navbar';
+import Navbar from\ 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -27,7 +27,7 @@ function App() {
   return (
     <div>
       <Navbar variant="dark" bg="dark" sticky="top" className="p-0 shadow">
-        <Navbar.Brand className="me-0 px-3 col-lg-2">couster</Navbar.Brand>
+        <Navbar.Brand className="me-0 px-3 col-lg-2">cu-ouster</Navbar.Brand>
         <Navbar.Text className="mx-2"><StatusBadge status={status}></StatusBadge></Navbar.Text>
         <Navbar.Text className="mx-2"><AlertText status={status}></AlertText></Navbar.Text>
       </Navbar>
