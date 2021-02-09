@@ -1,0 +1,17 @@
+[package]
+name = "couster"
+version = "0.1.0"
+authors = ["Pete Gadomski <pete.gadomski@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+anyhow = "*"
+hyper = "*"
+listenfd = "*"
+log = "*"
+pretty_env_logger = "*"
+serde = { version = "*", features = ["derive"] }
+serde_json = "*"
+thiserror = "*"
+tokio = { version = "*", features = ["full"] }
+warp = "*"
