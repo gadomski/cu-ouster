@@ -1,5 +1,5 @@
 function Home(props) {
-    return null;
+    return "home";
 }
 
 export default Home;

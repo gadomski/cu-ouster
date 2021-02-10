@@ -1,14 +1,15 @@
 import './App.css';
 import { StatusBadge, AlertText } from './Status';
-import Dashboard from './Dashboard';
+import Alerts from './Alerts';
+import Home from './Home';
 import Sidebar from './Sidebar';
 
 import { useState, useEffect } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 const SERVER_ADDR = "localhost:4242";
 
@@ -21,11 +22,10 @@ function App() {
 
   useEffect(() => {
     loadResource("status", setStatus);
-    setInterval(() => loadResource("status", setStatus), 5000);
   }, []);
 
   return (
-    <div>
+    <BrowserRouter>
       <Navbar variant="dark" bg="dark" sticky="top" className="p-0 shadow">
         <Navbar.Brand className="me-0 px-3 col-lg-2">cu-ouster</Navbar.Brand>
         <Navbar.Text className="mx-2"><StatusBadge status={status}></StatusBadge></Navbar.Text>
@@ -33,13 +33,18 @@ function App() {
       </Navbar>
       <Container fluid>
         <Row>
-          <Sidebar />
-          <Col>
-            <Dashboard />
+          <Col lg={2}>
+            <Sidebar />
+          </Col>
+          <Col lg={10} className="pt-4 px-4">
+            <Switch>
+              <Route path="/alerts"><Alerts status={status} /></Route>
+              <Route path="/"><Home /></Route>
+            </Switch>
           </Col>
         </Row>
       </Container>
-    </div>
+    </BrowserRouter>
   );
 }
 
