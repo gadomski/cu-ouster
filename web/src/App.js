@@ -9,7 +9,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
 
 const SERVER_ADDR = "localhost:4242";
 
@@ -27,7 +27,7 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar variant="dark" bg="dark" sticky="top" className="p-0 shadow">
-        <Navbar.Brand className="me-0 px-3 col-lg-2">cu-ouster</Navbar.Brand>
+        <Link to="/" className="me-0 px-3 col-lg-2 navbar-brand">cu-ouster</Link>
         <Navbar.Text className="mx-2"><StatusBadge status={status}></StatusBadge></Navbar.Text>
         <Navbar.Text className="mx-2"><AlertText status={status}></AlertText></Navbar.Text>
       </Navbar>

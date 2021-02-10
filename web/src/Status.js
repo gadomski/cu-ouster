@@ -1,11 +1,13 @@
-import Badge from 'react-bootstrap/Badge';
+import { Link } from 'react-router-dom';
 
 function StatusBadge(props) {
+    let variant = "danger";
+    let text = "Not connected";
     if (props.status.isLoaded) {
         const data = props.status.data;
         if (data.is_scanner_connected) {
             const status = data.sensor_info.status;
-            let variant = "success";
+            text = status;
             switch (status) {
                 case "UNCONFIGURED":
                 case "ERROR":
@@ -15,17 +17,14 @@ function StatusBadge(props) {
                 case "INITIALIZING":
                     variant = "warning";
                     break;
-                case "RUNNING":
-                    variant = "success";
-                    break;
             }
-            return <Badge variant={variant}>{status}</Badge>;
         } else {
-            return <Badge variant="warning">No scanner</Badge>;
+            variant = "danger";
+            text = "No scanner";
         }
-    } else {
-        return <Badge variant="danger">Not connected</Badge>;
     }
+    const className = `badge badge-${variant}`;
+    return <Link to="/alerts" className={className}>{text}</Link>;
 }
 
 function AlertText(props) {
