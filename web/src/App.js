@@ -4,7 +4,7 @@ import Dashboard from './Dashboard';
 import Sidebar from './Sidebar';
 
 import { useState, useEffect } from 'react';
-import Navbar from\ 'react-bootstrap/Navbar';
+import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
