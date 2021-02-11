@@ -3,6 +3,7 @@ import { StatusBadge, AlertText } from './Status';
 import Alerts from './Alerts';
 import Home from './Home';
 import Sidebar from './Sidebar';
+import Info from './Info';
 
 import { useState, useEffect } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
@@ -39,7 +40,8 @@ function App() {
           <Col lg={10} className="pt-4 px-4">
             <Switch>
               <Route path="/alerts"><Alerts status={status} /></Route>
-              <Route path="/"><Home /></Route>
+              <Route path="/info"><Info status={status} /></Route>
+              <Route path="/"><Home status={status} serverAddr={SERVER_ADDR} /></Route>
             </Switch>
           </Col>
         </Row>

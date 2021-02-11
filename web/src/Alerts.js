@@ -3,10 +3,12 @@ import { Alert as BootstrapAlert } from 'react-bootstrap';
 
 function Alerts(props) {
     let alerts;
-    if (!props.status.isLoaded || !props.status.data.is_scanner_connected) {
+    if (!props.status.isLoaded) {
         alerts = <Loading />;
+    } else if (!props.status.data.is_scanner_connected) {
+        alerts = <BootstrapAlert variant="danger">Not connected to scanner</BootstrapAlert>;
     } else {
-        alerts = props.status.data.alerts.log.filter(a => a.active).map(a => <Alert alert={a} key={a.cursor} />);
+        alerts = activeAlerts(props.status.data.alerts);
         if (alerts.length === 0) {
             alerts = [<Alert key={-1} variant="success">No active alerts!</Alert>];
         }
@@ -31,6 +33,10 @@ function Alert(props) {
         <p>{alert.msg}</p>
         {alert.msg_verbose && <p>{alert.msg_verbose}</p>}
     </BootstrapAlert>
+}
+
+function activeAlerts(alerts) {
+    return alerts.log.filter(a => a.active).map(a => <Alert alert={a} key={a.cursor} />);
 }
 
 export default Alerts;
