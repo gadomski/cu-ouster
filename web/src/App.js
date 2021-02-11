@@ -13,6 +13,7 @@ import Col from 'react-bootstrap/Col';
 import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
 
 const SERVER_ADDR = "localhost:4242";
+const UPDATE_INTERVAL_MS = 5000;
 
 function App() {
   const [status, setStatus] = useState({
@@ -20,9 +21,11 @@ function App() {
     isLoaded: false,
     error: null,
   });
+  const [updateIntervalId, setUpdateIntervalId] = useState(null);
 
   useEffect(() => {
     loadResource("status", setStatus);
+    // setUpdateIntervalId(setInterval(() => loadResource("status", setStatus), UPDATE_INTERVAL_MS));
   }, []);
 
   return (

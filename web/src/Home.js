@@ -17,68 +17,68 @@ function Home(props) {
 }
 
 function ServerCard(props) {
-    let border, text;
+    let variant, text;
     if (props.status.isLoaded) {
-        border = "success";
+        variant = "success";
         text = `Connected to server at ${props.serverAddr}`;
     } else if (props.status.error) {
-        border = "danger";
+        variant = "danger";
         text = props.status.error;
     } else {
-        border = "light";
+        variant = "secondary";
         text = <Loading />;
     }
-    return <HomeCard border={border} title="Server" subtitle="API server running on the fitlet" text={text} />
+    return <HomeCard variant={variant} title="Server" subtitle="API server running on the fitlet" text={text} />
 }
 
 function ScannerCard(props) {
-    let border, text;
+    let variant, text;
     if (props.status.isLoaded) {
         if (props.status.data.is_scanner_connected) {
-            border = "success";
+            variant = "success";
             text = `Connected to scanner at ${props.status.data.scanner_addr}`;
         } else {
-            border = "danger";
+            variant = "danger";
             text = "Not connected to scanner";
         }
     } else {
-        border = "light";
+        variant = "secondary";
         text = <Loading />;
     }
-    return <HomeCard title="Scanner" subtitle="OS-1 64 lidar scanner" border={border} text={text} />;
+    return <HomeCard title="Scanner" subtitle="OS-1 64 lidar scanner" variant={variant} text={text} />;
 }
 
 function AlertsCard(props) {
-    let border, text, suffix;
+    let variant, text, suffix;
     if (props.status.isLoaded) {
         if (props.status.data.is_scanner_connected) {
             const alerts = activeAlerts(props.status.data.alerts);
             if (alerts.length == 0) {
-                border = "success";
+                variant = "success";
                 text = "No active alerts";
             } else {
-                border = "danger";
+                variant = "danger";
                 text = `${alerts.length} active alerts`;
                 suffix = <Link to="/alerts" className="btn btn-outline-dark">Go to alerts page</Link>;
             }
         } else {
-            border = "danger";
+            variant = "danger";
             text = "Not connected to scanner";
         }
     } else {
-        border = "light";
+        variant = "secondary";
         text = <Loading />;
     }
-    return <HomeCard title="Alerts" subtitle="Alerts from the scanner" border={border} text={text} suffix={suffix} />;
+    return <HomeCard title="Alerts" subtitle="Alerts from the scanner" variant={variant} text={text} suffix={suffix} />;
 }
 
 function HomeCard(props) {
-    return <Card border={props.border} bg="light">
+    return <Card className={`alert-${props.variant}`}>
         <Card.Body>
             <Card.Title>{props.title}</Card.Title>
             <Card.Subtitle className="mb-4 text-muted">{props.subtitle}</Card.Subtitle>
             <Card.Text>
-                <Alert variant={props.border}>{props.text}</Alert>
+                {props.text}
             </Card.Text>
             {props.suffix}
         </Card.Body>
