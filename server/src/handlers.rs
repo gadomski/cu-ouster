@@ -1,4 +1,4 @@
-use crate::Command;
+use crate::{Command, Manager};
 use serde::Serialize;
 use serde_json::Value;
 use std::convert::Infallible;
@@ -8,19 +8,21 @@ use warp::{reply, Reply};
 #[derive(Debug, Serialize)]
 pub struct Status {
     is_scanner_connected: bool,
+    scanner_addr: String,
     sensor_info: Value,
     alerts: Value,
 }
 
-pub async fn status(sender: Sender<Command>) -> Result<impl Reply, Infallible> {
-    let sensor_info = get_json(&sender, "sensor_info").await;
+pub async fn status(manager: Manager) -> Result<impl Reply, Infallible> {
+    let sensor_info = get_json(manager.sender(), "sensor_info").await;
     let alerts = if !sensor_info.is_null() {
-        get_json(&sender, "alerts").await
+        get_json(manager.sender(), "alerts").await
     } else {
         Value::Null
     };
     let status = Status {
         is_scanner_connected: !(sensor_info.is_null() | alerts.is_null()),
+        scanner_addr: manager.config().scanner_addr.to_string(),
         sensor_info,
         alerts,
     };

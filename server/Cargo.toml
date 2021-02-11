@@ -1,11 +1,12 @@
 [package]
-name = "couster"
+name = "ouster"
 version = "0.1.0"
 authors = ["Pete Gadomski <pete.gadomski@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 anyhow = "*"
+clap = "*"
 hyper = "*"
 listenfd = "*"
 log = "*"
@@ -14,4 +15,5 @@ serde = { version = "*", features = ["derive"] }
 serde_json = "*"
 thiserror = "*"
 tokio = { version = "*", features = ["full"] }
+toml = "*"
 warp = "*"

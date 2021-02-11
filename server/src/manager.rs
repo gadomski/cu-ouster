@@ -1,15 +1,13 @@
-use crate::Client;
+use crate::{Client, Config};
 use anyhow::{anyhow, Error};
 use serde_json::Value;
-use tokio::{
-    net::ToSocketAddrs,
-    sync::{mpsc, oneshot},
-};
+use tokio::sync::{mpsc, oneshot};
 
 const CHANNEL_BUFFER: usize = 32;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Manager {
+    config: Config,
     sender: mpsc::Sender<Command>,
 }
 
@@ -22,8 +20,9 @@ pub enum Command {
 }
 
 impl Manager {
-    pub fn new<A: 'static + ToSocketAddrs + Send + Clone>(addr: A) -> Manager {
+    pub fn new(config: Config) -> Manager {
         let (sender, mut receiver) = mpsc::channel(CHANNEL_BUFFER);
+        let addr = config.scanner_addr.clone();
         tokio::spawn(async move {
             let a = addr.clone();
             let mut client = match Client::connect(a).await {
@@ -60,10 +59,14 @@ impl Manager {
                 }
             }
         });
-        Manager { sender }
+        Manager { config, sender }
     }
 
-    pub fn sender(&self) -> mpsc::Sender<Command> {
-        self.sender.clone()
+    pub fn sender(&self) -> &mpsc::Sender<Command> {
+        &self.sender
+    }
+
+    pub fn config(&self) -> &Config {
+        &self.config
     }
 }
