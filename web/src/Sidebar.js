@@ -1,6 +1,6 @@
 import './Sidebar.css';
 import Nav from 'react-bootstrap/Nav';
-import { Home, AlertTriangle } from 'react-feather';
+import { Home, AlertTriangle, Info } from 'react-feather';
 import { NavLink } from 'react-router-dom';
 
 function Sidebar(props) {
@@ -11,6 +11,7 @@ function Sidebar(props) {
                     <Nav.Item as="li">
                         <NavLink to="/" exact className="nav-link"><Home className="feather" />Home</NavLink>
                         <NavLink to="/alerts" className="nav-link"><AlertTriangle className="feather" />Alerts</NavLink>
+                        <NavLink to="/info" className="nav-link"><Info className="feather" />Info</NavLink>
                     </Nav.Item>
                 </Nav>
             </div>

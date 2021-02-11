@@ -2,16 +2,17 @@ import Loading from './Loading';
 import { Alert as BootstrapAlert } from 'react-bootstrap';
 
 function Alerts(props) {
-    if (!props.status.isLoaded) {
-        return <Loading />;
-    }
-    let alerts = props.status.data.alerts.log.filter(a => a.active).map(a => <Alert alert={a} key={a.cursor} />);
-    if (alerts.length === 0) {
-        alerts = [<Alert key={-1} variant="success">No active alerts!</Alert>];
+    let alerts;
+    if (!props.status.isLoaded || !props.status.data.is_scanner_connected) {
+        alerts = <Loading />;
+    } else {
+        alerts = props.status.data.alerts.log.filter(a => a.active).map(a => <Alert alert={a} key={a.cursor} />);
+        if (alerts.length === 0) {
+            alerts = [<Alert key={-1} variant="success">No active alerts!</Alert>];
+        }
     }
     return (
         <div>
-            <h2 className="border-bottom mb-4 pb-2">Alerts</h2>
             {alerts}
         </div>
     )
