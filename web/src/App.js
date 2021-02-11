@@ -21,11 +21,15 @@ function App() {
     isLoaded: false,
     error: null,
   });
-  const [updateIntervalId, setUpdateIntervalId] = useState(null);
 
   useEffect(() => {
     loadResource("status", setStatus);
-    // setUpdateIntervalId(setInterval(() => loadResource("status", setStatus), UPDATE_INTERVAL_MS));
+  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      loadResource("status", setStatus);
+    }, UPDATE_INTERVAL_MS);
+    return () => clearInterval(interval);
   }, []);
 
   return (

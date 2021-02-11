@@ -23,7 +23,7 @@ function ServerCard(props) {
         text = `Connected to server at ${props.serverAddr}`;
     } else if (props.status.error) {
         variant = "danger";
-        text = props.status.error;
+        text = props.status.error.toString();
     } else {
         variant = "secondary";
         text = <Loading />;
@@ -52,14 +52,14 @@ function AlertsCard(props) {
     let variant, text, suffix;
     if (props.status.isLoaded) {
         if (props.status.data.is_scanner_connected) {
-            const alerts = activeAlerts(props.status.data.alerts);
+            const alerts = props.status.data.alerts.log.filter(a => a.active);
             if (alerts.length == 0) {
                 variant = "success";
                 text = "No active alerts";
             } else {
                 variant = "danger";
                 text = `${alerts.length} active alerts`;
-                suffix = <Link to="/alerts" className="btn btn-outline-dark">Go to alerts page</Link>;
+                suffix = <Link to="/alerts" className="btn btn-primary">View</Link>;
             }
         } else {
             variant = "danger";
@@ -80,8 +80,8 @@ function HomeCard(props) {
             <Card.Text>
                 {props.text}
             </Card.Text>
-            {props.suffix}
         </Card.Body>
+        {props.suffix && <Card.Footer className="text-center">{props.suffix}</Card.Footer>}
     </Card>
 }
 
