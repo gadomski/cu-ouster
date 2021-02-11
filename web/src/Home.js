@@ -32,11 +32,12 @@ function ServerCard(props) {
 }
 
 function ScannerCard(props) {
-    let variant, text;
+    let variant, text, suffix;
     if (props.status.isLoaded) {
         if (props.status.data.is_scanner_connected) {
             variant = "success";
             text = `Connected to scanner at ${props.status.data.scanner_addr}`;
+            suffix = <Link to="/info" className="btn btn-outline-dark">Info</Link>;
         } else {
             variant = "danger";
             text = "Not connected to scanner";
@@ -45,7 +46,7 @@ function ScannerCard(props) {
         variant = "secondary";
         text = <Loading />;
     }
-    return <HomeCard title="Scanner" subtitle="OS-1 64 lidar scanner" variant={variant} text={text} />;
+    return <HomeCard title="Scanner" subtitle="OS-1 64 lidar scanner" variant={variant} text={text} suffix={suffix} />;
 }
 
 function AlertsCard(props) {
@@ -59,7 +60,7 @@ function AlertsCard(props) {
             } else {
                 variant = "danger";
                 text = `${alerts.length} active alerts`;
-                suffix = <Link to="/alerts" className="btn btn-primary">View</Link>;
+                suffix = <Link to="/alerts" className="btn btn-outline-dark">Alerts</Link>;
             }
         } else {
             variant = "danger";
@@ -81,7 +82,7 @@ function HomeCard(props) {
                 {props.text}
             </Card.Text>
         </Card.Body>
-        {props.suffix && <Card.Footer className="text-center">{props.suffix}</Card.Footer>}
+        {props.suffix && <div><hr /><Card.Body className="pt-1 text-center">{props.suffix}</Card.Body></div>}
     </Card>
 }
 
