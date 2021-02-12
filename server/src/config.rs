@@ -4,6 +4,7 @@ use std::{fs::File, io::Read, path::Path};
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Config {
+    pub server_addr: String,
     pub scanner_addr: String,
 }
 

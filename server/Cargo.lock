@@ -145,6 +145,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8aebca1129a03dc6dc2b127edd729435bbc4a37e1d5f4d7513165089ceb02634"
 
 [[package]]
+name = "cu-ouster"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "hyper",
+ "listenfd",
+ "log",
+ "pretty_env_logger",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "toml",
+ "warp",
+]
+
+[[package]]
 name = "digest"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -620,24 +638,6 @@ name = "opaque-debug"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
-
-[[package]]
-name = "ouster"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "hyper",
- "listenfd",
- "log",
- "pretty_env_logger",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
- "toml",
- "warp",
-]
 
 [[package]]
 name = "parking_lot"

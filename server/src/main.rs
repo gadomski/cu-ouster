@@ -1,8 +1,6 @@
 use clap::{App, Arg};
-use hyper::server::Server;
-use listenfd::ListenFd;
-use ouster::{filters, Config, Manager};
-use std::{convert::Infallible, env};
+use cu_ouster::{filters, Config, Manager};
+use std::{env, net::SocketAddr};
 
 #[tokio::main]
 async fn main() {
@@ -12,23 +10,12 @@ async fn main() {
     let config = Config::from_path(matches.value_of("CONFIG").unwrap()).unwrap();
 
     if env::var_os("RUST_LOG").is_none() {
-        env::set_var("RUST_LOG", "debug");
+        env::set_var("RUST_LOG", "cu_ouster=info");
     }
     pretty_env_logger::init();
 
+    let server_addr = config.server_addr.parse::<SocketAddr>().unwrap();
     let manager = Manager::new(config);
     let api = filters::api(manager);
-    let service = warp::service(api);
-    let make_service = hyper::service::make_service_fn(|_: _| {
-        let service = service.clone();
-        async move { Ok::<_, Infallible>(service) }
-    });
-    let mut listenfd = ListenFd::from_env();
-    let server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
-        Server::from_tcp(l).unwrap()
-    } else {
-        Server::bind(&([127, 0, 0, 1], 4242).into())
-    };
-
-    server.serve(make_service).await.unwrap();
+    warp::serve(api).run(server_addr).await; 
 }

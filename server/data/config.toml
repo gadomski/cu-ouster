@@ -1,1 +1,2 @@
+server_addr = "127.0.0.1:4242"
 scanner_addr = "os1-991906000126.local:7501"
