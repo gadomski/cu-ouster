@@ -10,11 +10,12 @@ function Alerts(props) {
     } else {
         alerts = activeAlerts(props.status.data.alerts);
         if (alerts.length === 0) {
-            alerts = [<Alert key={-1} variant="success">No active alerts!</Alert>];
+            alerts = [<BootstrapAlert key={-1} variant="success">No active alerts!</BootstrapAlert>];
         }
     }
     return (
         <div>
+            <h2 className="border-bottom mb-4 pb-3">Alerts</h2>
             {alerts}
         </div>
     )

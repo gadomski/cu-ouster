@@ -17,6 +17,9 @@ function StatusBadge(props) {
                 case "INITIALIZING":
                     variant = "warning";
                     break;
+                case "RUNNING":
+                    variant = "success";
+                    break;
             }
         } else {
             variant = "danger";
