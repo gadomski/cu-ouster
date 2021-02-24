@@ -6,14 +6,18 @@ edition = "2018"
 
 [dependencies]
 anyhow = "*"
+bytes = "*"
 clap = "*"
 hyper = "*"
 listenfd = "*"
 log = "*"
+futures = "*"
 pretty_env_logger = "*"
 serde = { version = "*", features = ["derive"] }
 serde_json = "*"
 thiserror = "*"
+regex = "*"
 tokio = { version = "*", features = ["full"] }
+tokio-util = { version = "*", features = ["full"] }
 toml = "*"
 warp = "*"
