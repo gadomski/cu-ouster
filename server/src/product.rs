@@ -33,6 +33,20 @@ impl Product {
             channels,
         })
     }
+
+    pub fn measurement_block_len(&self) -> usize {
+        match self.channels {
+            16 => 212,
+            32 => 404,
+            64 => 788,
+            128 => 1556,
+            _ => panic!("shouldn't have a weird channel count: {}", self.channels),
+        }
+    }
+
+    pub fn channels(&self) -> u16 {
+        self.channels
+    }
 }
 
 impl FromStr for Product {

@@ -4,8 +4,7 @@ use std::env;
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = env::args().collect();
-    let mut server = Server::bind(&args[1], args[2].parse().unwrap())
-        .await
-        .unwrap();
+    let product = args[2].parse().unwrap();
+    let mut server = Server::bind(&args[1], product).await.unwrap();
     let _frame = server.read_frame().await.unwrap();
 }
