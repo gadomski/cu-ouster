@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Error};
 use regex::Regex;
-use std::str::FromStr;
+use std::{fmt, str::FromStr};
 
 #[derive(Debug, PartialEq)]
 pub struct Product {
@@ -9,6 +9,19 @@ pub struct Product {
 }
 
 impl Product {
+    /// Creates a new product from the given generation and number of channels.
+    ///
+    /// Checks for invalid values.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use cu_ouster::Product;
+    /// let product = Product::new(1, 128).unwrap();
+    /// assert_eq!(1, product.generation());
+    /// assert_eq!(128, product.channels());
+    /// assert_eq!("OS1-128", product.to_string());
+    /// ```
     pub fn new(generation: u8, channels: u16) -> Result<Product, Error> {
         if channels == 16 {
             if generation != 1 {
@@ -34,6 +47,17 @@ impl Product {
         })
     }
 
+    /// Returns the length of a measurement block, in bytes, for this product.
+    ///
+    /// Based on the number of channels.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use cu_ouster::Product;
+    /// let product = Product::new(1, 128).unwrap();
+    /// assert_eq!(1556, product.measurement_block_len());
+    /// ```
     pub fn measurement_block_len(&self) -> usize {
         match self.channels {
             16 => 212,
@@ -44,8 +68,30 @@ impl Product {
         }
     }
 
+    /// Returns the number of channels in this product.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use cu_ouster::Product;
+    /// let product = Product::new(1, 128).unwrap();
+    /// assert_eq!(128, product.channels());
+    /// ```
     pub fn channels(&self) -> u16 {
         self.channels
+    }
+
+    /// Returns the generation of this product.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use cu_ouster::Product;
+    /// let product = Product::new(1, 128).unwrap();
+    /// assert_eq!(1, product.generation());
+    /// ```
+    pub fn generation(&self) -> u8 {
+        self.generation
     }
 }
 
@@ -61,6 +107,12 @@ impl FromStr for Product {
         } else {
             Err(anyhow!("invalid product specifier: {}", s))
         }
+    }
+}
+
+impl fmt::Display for Product {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "OS{}-{}", self.generation, self.channels)
     }
 }
 

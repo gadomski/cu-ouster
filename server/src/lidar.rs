@@ -8,7 +8,7 @@ use tokio::net::{ToSocketAddrs, UdpSocket};
 use tokio_util::{codec::Decoder, udp::UdpFramed};
 
 /// A listener for lidar data.
-pub struct Server {
+pub struct Listener {
     stream: UdpFramed<LidarDecoder>,
 }
 
@@ -55,22 +55,25 @@ pub struct Mode {
     pub rotation_rate: u8,
 }
 
-impl Server {
+impl Listener {
     /// Binds this server to the provided address.
-    pub async fn bind<A: ToSocketAddrs>(addr: A, product: Product) -> IoResult<Server> {
+    pub async fn bind<A: ToSocketAddrs>(addr: A, product: Product) -> IoResult<Listener> {
         let decoder = LidarDecoder { product };
-        UdpSocket::bind(addr).await.map(|socket| Server {
+        UdpSocket::bind(addr).await.map(|socket| Listener {
             stream: UdpFramed::new(socket, decoder),
         })
     }
 
     /// Reads a single packet of lidar data from the socket.
-    pub async fn read_frame(&mut self) -> Result<Option<Packet>, Error> {
+    pub async fn read_packet(&mut self) -> Result<Option<Packet>, Error> {
         if let Some(packet) = self.stream.next().await {
-            let packet = packet?.0;
-            println!("{:?}", packet);
+            match packet {
+                Ok((packet, _)) => Ok(Some(packet)),
+                Err(err) => Err(err),
+            }
+        } else {
+            Ok(None)
         }
-        unimplemented!()
     }
 }
 
