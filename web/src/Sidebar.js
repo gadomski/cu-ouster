@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 
 function Sidebar(props) {
     return (
-        <Nav className="sidebar col-lg-2 bg-light">
+        <Nav className="sidebar d-none col-md-2 d-md-block bg-light">
             <div className="position-sticky pt-3">
                 <Nav as="ul" className="flex-column">
                     <Nav.Item as="li">

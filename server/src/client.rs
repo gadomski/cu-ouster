@@ -1,4 +1,4 @@
-use anyhow::Error;
+use anyhow::{Error, anyhow};
 use serde_json::Value;
 use std::fmt;
 use tokio::{
@@ -35,7 +35,53 @@ impl Client {
             return Err(Error::from(EndOfFile));
         }
         log::debug!("received response: {}", response);
-        serde_json::from_str(&response).map_err(Error::from)
+        if response.starts_with("error") {
+            Err(anyhow!("ouster client {}", response.trim()))
+        } else {
+            serde_json::from_str(&response).map_err(Error::from)
+        }
+    }
+
+    pub async fn set(&mut self, key: &str, value: &str) -> Result<(), Error> {
+        log::debug!("setting {}={}", key, value);
+        let command: Vec<u8> = format!("set_config_param {} {}\n", key, value).bytes().collect();
+        self.stream.write_all(&command).await?;
+        let mut response = String::new();
+        let mut stream = BufReader::new(&mut self.stream);
+        let count = stream.read_line(&mut response).await?;
+        if count == 0 {
+            log::warn!("end of file");
+            return Err(Error::from(EndOfFile));
+        }
+        log::debug!("received response: {}", response);
+        if response.starts_with("error") {
+            Err(anyhow!("ouster client {}", response.trim()))
+        } else if response.trim() != "set_config_param" {
+            Err(anyhow!("response {} does not match {}", response.trim(), "set_config_param"))
+        } else {
+            Ok(())
+        }
+    }
+
+    pub async fn reinitialize(&mut self) -> Result<(), Error> {
+        log::debug!("reinitializing");
+        let command: Vec<u8> = format!("reinitialize\n").bytes().collect();
+        self.stream.write_all(&command).await?;
+        let mut response = String::new();
+        let mut stream = BufReader::new(&mut self.stream);
+        let count = stream.read_line(&mut response).await?;
+        if count == 0 {
+            log::warn!("end of file");
+            return Err(Error::from(EndOfFile));
+        }
+        log::debug!("received response: {}", response);
+        if response.starts_with("error") {
+            Err(anyhow!("ouster client {}", response.trim()))
+        } else if response.trim() != "reinitialize" {
+            Err(anyhow!("response {} does not match {}", response.trim(), "reinitialize"))
+        } else {
+            Ok(())
+        }
     }
 }
 

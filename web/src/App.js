@@ -41,10 +41,8 @@ function App() {
       </Navbar>
       <Container fluid>
         <Row>
-          <Col lg={2}>
-            <Sidebar />
-          </Col>
-          <Col lg={10} className="pt-4 px-4">
+          <Sidebar />
+          <Col lg={10} md={9} className="ml-sm-auto pt-4 px-4">
             <Switch>
               <Route path="/alerts"><Alerts status={status} /></Route>
               <Route path="/info"><Info status={status} /></Route>
