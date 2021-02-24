@@ -7,6 +7,7 @@ use tokio::{
 };
 
 /// A client for talking to an Ouster scanner.
+#[derive(Debug)]
 pub struct Client {
     stream: TcpStream,
 }
