@@ -17,7 +17,7 @@ async fn main() {
     let port = args[1].parse().unwrap();
     let scanner_addr = args[2].clone();
 
-    let manager = Manager::new(scanner_addr);
+    let manager = Manager::new_rw(scanner_addr);
     let api = filters::api(manager);
     let cors = warp::cors().allow_any_origin();
     let routes = api.with(warp::log("cu_ouster")).with(cors);

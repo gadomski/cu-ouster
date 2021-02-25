@@ -7,6 +7,6 @@ mod product;
 mod scanner;
 
 pub use client::Client;
-pub use manager::Manager;
+pub use manager::{Manager, RwManager};
 pub use product::Product;
 pub use scanner::Scanner;
