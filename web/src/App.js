@@ -4,6 +4,7 @@ import Alerts from './Alerts';
 import Home from './Home';
 import Sidebar from './Sidebar';
 import Info from './Info';
+import Config from './Config';
 
 import { useState, useEffect } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
@@ -21,16 +22,22 @@ function App() {
     isLoaded: false,
     error: null,
   });
+  const [serverAddr, setServerAddr] = useState(SERVER_ADDR)
 
   useEffect(() => {
-    loadResource("status", setStatus);
-  }, []);
+    loadResource(serverAddr, "status", setStatus);
+  }, [serverAddr]);
   useEffect(() => {
     const interval = setInterval(() => {
-      loadResource("status", setStatus);
+      loadResource(serverAddr, "status", setStatus);
     }, UPDATE_INTERVAL_MS);
     return () => clearInterval(interval);
-  }, []);
+  }, [serverAddr]);
+
+  function onChangeServerAddr(e) {
+    e.preventDefault();
+    setServerAddr(e.target.value);
+  }
 
   return (
     <BrowserRouter>
@@ -38,15 +45,17 @@ function App() {
         <Link to="/" className="me-0 px-3 col-lg-2 navbar-brand">cu-ouster</Link>
         <Navbar.Text className="mx-2"><StatusBadge status={status}></StatusBadge></Navbar.Text>
         <Navbar.Text className="mx-2"><AlertText status={status}></AlertText></Navbar.Text>
+        <Navbar.Text className="mx-2">{serverAddr}</Navbar.Text>
       </Navbar>
       <Container fluid>
         <Row>
           <Sidebar />
           <Col lg={10} md={9} className="ml-sm-auto pt-4 px-4">
             <Switch>
+              <Route path="/config"><Config onChange={onChangeServerAddr} serverAddr={serverAddr} /></Route>
               <Route path="/alerts"><Alerts status={status} /></Route>
               <Route path="/info"><Info status={status} /></Route>
-              <Route path="/"><Home status={status} serverAddr={SERVER_ADDR} /></Route>
+              <Route path="/"><Home status={status} serverAddr={serverAddr} /></Route>
             </Switch>
           </Col>
         </Row>
@@ -56,8 +65,8 @@ function App() {
 }
 
 
-function loadResource(name, setResource) {
-  fetch(`http://${SERVER_ADDR}/${name}`)
+function loadResource(serverAddr, name, setResource) {
+  fetch(`http://${serverAddr}/${name}`)
     .then(result => result.json())
     .then(
       (result) => {

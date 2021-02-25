@@ -3,9 +3,17 @@ use std::convert::Infallible;
 use warp::{Filter, Rejection, Reply};
 
 pub fn api(manager: RwManager) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-    self::manager(manager.clone())
+    status(manager.clone())
+        .or(self::manager(manager.clone()))
         .or(set_scanner_addr(manager.clone()))
         .or(scanner_metadata(manager.clone()))
+}
+
+fn status(manager: RwManager) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    warp::path!("status")
+        .and(warp::get())
+        .and(with_manager(manager))
+        .and_then(handlers::status)
 }
 
 fn manager(manager: RwManager) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {

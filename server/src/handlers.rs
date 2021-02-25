@@ -2,6 +2,11 @@ use crate::RwManager;
 use std::convert::Infallible;
 use warp::{reject, reply, Rejection, Reply};
 
+pub async fn status(manager: RwManager) -> Result<impl Reply, Infallible> {
+    let manager = manager.read().await;
+    Ok(reply::json(&manager.status().await))
+}
+
 pub async fn manager(manager: RwManager) -> Result<impl Reply, Infallible> {
     let manager = manager.read().await;
     Ok(reply::json(&*manager))
