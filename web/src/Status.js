@@ -6,7 +6,7 @@ function StatusBadge(props) {
     if (props.status.isLoaded) {
         const data = props.status.data;
         if (data.is_scanner_connected) {
-            const status = data.sensor_info.status;
+            const status = data.metadata.sensor_info.status;
             text = status;
             switch (status) {
                 case "UNCONFIGURED":
@@ -32,7 +32,7 @@ function StatusBadge(props) {
 
 function AlertText(props) {
     if (props.status.isLoaded && props.status.data.is_scanner_connected) {
-        const alerts = props.status.data.alerts.log;
+        const alerts = props.status.data.metadata.alerts.log;
         if (alerts.length > 0) {
             const alert = alerts[0];
             return alert.msg;

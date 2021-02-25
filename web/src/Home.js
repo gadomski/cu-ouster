@@ -5,13 +5,21 @@ import Loading from './Loading';
 import activeAlerts from './Alerts';
 import { Link } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
+import { Button } from 'react-bootstrap';
 
 function Home(props) {
+    console.log(props.status);
     return <div>
         <Row>
             <Col><ServerCard status={props.status} serverAddr={props.serverAddr} /></Col>
             <Col><ScannerCard status={props.status} /></Col>
             <Col><AlertsCard status={props.status} /></Col>
+        </Row>
+        <hr />
+        <Row>
+            <Col>
+                <Button onClick={props.onClick}>Start scanning</Button>
+            </Col>
         </Row>
     </div>;
 }
@@ -53,7 +61,7 @@ function AlertsCard(props) {
     let variant, text, suffix;
     if (props.status.isLoaded) {
         if (props.status.data.is_scanner_connected) {
-            const alerts = props.status.data.alerts.log.filter(a => a.active);
+            const alerts = props.status.data.metadata.alerts.log.filter(a => a.active);
             if (alerts.length == 0) {
                 variant = "success";
                 text = "No active alerts";

@@ -44,6 +44,7 @@ impl Scanner {
             "beam_intrinsics": self.client.get("beam_intrinsics").await?,
             "imu_intrinsics": self.client.get("imu_intrinsics").await?,
             "lidar_intrinsics": self.client.get("lidar_intrinsics").await?,
+            "alerts": self.client.get("alerts").await?,
         }))
     }
 

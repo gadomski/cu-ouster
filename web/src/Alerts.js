@@ -8,7 +8,7 @@ function Alerts(props) {
     } else if (!props.status.data.is_scanner_connected) {
         alerts = <BootstrapAlert variant="danger">Not connected to scanner</BootstrapAlert>;
     } else {
-        alerts = activeAlerts(props.status.data.alerts);
+        alerts = activeAlerts(props.status.data.metadata.alerts);
         if (alerts.length === 0) {
             alerts = [<BootstrapAlert key={-1} variant="success">No active alerts!</BootstrapAlert>];
         }

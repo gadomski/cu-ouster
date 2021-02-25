@@ -23,6 +23,7 @@ impl Manager {
                 let metadata = scanner.metadata().await.ok();
                 json!({
                     "is_scanner_connected": metadata.is_some(),
+                    "scanner_addr": self.scanner_addr,
                     "err": null,
                     "metadata": metadata,
                 })
@@ -30,6 +31,7 @@ impl Manager {
             Err(err) => {
                 json!({
                     "is_scanner_connected": false,
+                    "scanner_addr": self.scanner_addr,
                     "err": err.to_string(),
                     "metadata": null,
                 })

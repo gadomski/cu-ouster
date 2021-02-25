@@ -23,6 +23,7 @@ function App() {
     error: null,
   });
   const [serverAddr, setServerAddr] = useState(SERVER_ADDR)
+  const [scanning, setScanning] = useState(false);
 
   useEffect(() => {
     loadResource(serverAddr, "status", setStatus);
@@ -39,6 +40,20 @@ function App() {
     setServerAddr(e.target.value);
   }
 
+  function onClickHome(e) {
+    e.preventDefault();
+    fetch(`http://${serverAddr}/scanner/start`, { method: "POST" })
+      .then(result => result.json())
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  }
+
   return (
     <BrowserRouter>
       <Navbar variant="dark" bg="dark" sticky="top" className="p-0 shadow">
@@ -46,6 +61,8 @@ function App() {
         <Navbar.Text className="mx-2"><StatusBadge status={status}></StatusBadge></Navbar.Text>
         <Navbar.Text className="mx-2"><AlertText status={status}></AlertText></Navbar.Text>
         <Navbar.Text className="mx-2">{serverAddr}</Navbar.Text>
+        {status.isLoaded && <Navbar.Text className="mx-2">{status.data.scanner_addr}</Navbar.Text>}
+        <Navbar.Text className="mx-2">Scanning: {scanning ? "true" : "false"}</Navbar.Text>
       </Navbar>
       <Container fluid>
         <Row>
@@ -55,7 +72,7 @@ function App() {
               <Route path="/config"><Config onChange={onChangeServerAddr} serverAddr={serverAddr} /></Route>
               <Route path="/alerts"><Alerts status={status} /></Route>
               <Route path="/info"><Info status={status} /></Route>
-              <Route path="/"><Home status={status} serverAddr={serverAddr} /></Route>
+              <Route path="/"><Home status={status} serverAddr={serverAddr} onClick={onClickHome} /></Route>
             </Switch>
           </Col>
         </Row>
