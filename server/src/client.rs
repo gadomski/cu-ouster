@@ -24,11 +24,20 @@ impl Client {
     ///
     /// These map to the "get_*" commands from the TCP API command set,
     /// but you don't need to provide the get, i.e. use `get("config_txt")`.
-    pub async fn get(&mut self, key: &str) -> Result<Value, Error> {
-        let command: Vec<u8> = format!("get_{}\n", key).bytes().collect();
+    pub async fn get(&mut self, command: &str) -> Result<Value, Error> {
+        let command: Vec<u8> = format!("get_{}\n", command).bytes().collect();
         self.stream.write_all(&command).await?;
         let response = self.response().await?;
         serde_json::from_str(&response).map_err(Error::from)
+    }
+
+    /// Query a specific value inside of some metadata.
+    pub async fn get_key(&mut self, command: &str, key: &str) -> Result<Value, Error> {
+        let mut value = self.get(command).await?;
+        value
+            .get_mut(key)
+            .ok_or(anyhow!("missing key: {}", key))
+            .map(|v| v.take())
     }
 
     /// Sets a config value.

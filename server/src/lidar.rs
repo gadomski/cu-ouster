@@ -12,36 +12,44 @@ pub struct Listener {
     stream: UdpFramed<LidarDecoder>,
 }
 
+/// A lidar point.
+#[derive(Debug)]
+pub struct Point {
+    pub x: f64,
+    pub y: f64,
+    pub z: f64,
+}
+
 /// A lidar data packet.
 #[derive(Debug)]
 pub struct Packet {
-    measurements: Vec<Measurement>,
+    pub measurements: Vec<Measurement>,
 }
 
 /// A lidar measurement block.
 #[derive(Debug)]
 pub struct Measurement {
-    header: Header,
-    data: Vec<Data>,
-    status: u32,
+    pub header: Header,
+    pub data: Vec<Data>,
+    pub status: u32,
 }
 
 /// A lidar header.
 #[derive(Debug)]
 pub struct Header {
-    timestamp: u64,
-    measurement_id: u16,
-    frame_id: u16,
-    encoder_count: u32,
+    pub timestamp: u64,
+    pub measurement_id: u16,
+    pub frame_id: u16,
+    pub encoder_count: u32,
 }
 
 /// A lidar data block.
 #[derive(Debug)]
 pub struct Data {
-    range: u32,
-    signal_photons: u16,
-    reflectivity: u16,
-    near_infrared_photons: u16,
+    pub range: u32,
+    pub signal_photons: u16,
+    pub reflectivity: u16,
+    pub near_infrared_photons: u16,
 }
 
 #[derive(Debug)]

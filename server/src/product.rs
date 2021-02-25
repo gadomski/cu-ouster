@@ -99,7 +99,7 @@ impl FromStr for Product {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Product, Error> {
-        let regex = Regex::new(r"^(os|OS)(\d+)-(\d+)$")?;
+        let regex = Regex::new(r"^(os|OS)-?(\d+)-(\d+)$")?;
         if let Some(captures) = regex.captures(s) {
             let generation = captures.get(2).unwrap().as_str().parse().unwrap();
             let channels = captures.get(3).unwrap().as_str().parse().unwrap();
@@ -129,6 +129,10 @@ mod tests {
         assert_eq!(
             "OS1-32".parse::<Product>().unwrap(),
             Product::new(1, 32).unwrap()
+        );
+        assert_eq!(
+            "OS-1-128".parse::<Product>().unwrap(),
+            Product::new(1, 128).unwrap()
         );
         assert!("OS1-127".parse::<Product>().is_err());
     }
