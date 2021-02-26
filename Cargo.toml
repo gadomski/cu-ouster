@@ -5,22 +5,16 @@ authors = ["Pete Gadomski <pete.gadomski@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-anyhow = "*"
-bytes = "*"
-clap = "*"
-hyper = "*"
-etherparse = "*"
-listenfd = "*"
-log = "*"
-las = "*"
-futures = "*"
-pcap = "*"
-pretty_env_logger = "*"
-serde = { version = "*", features = ["derive"] }
-serde_json = "*"
-thiserror = "*"
-regex = "*"
-tokio = { version = "*", features = ["full"] }
-tokio-util = { version = "*", features = ["full"] }
-toml = "*"
-warp = "*"
+anyhow = "1.0"
+bytes = "1.0"
+etherparse = "0.9"
+futures = "0.3"
+las = "0.7"
+log = "0.4"
+pcap = "0.8"
+pretty_env_logger = "0.4"
+regex = "1.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.2", features = ["full"] }
+tokio-util = { version = "0.6", features = ["full"] }
