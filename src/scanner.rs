@@ -18,10 +18,11 @@ pub struct Scanner {
     client: Client,
 }
 
-struct PointComputer {
+pub struct PointComputer {
     lidar_origin_to_beam_origin_mm: f64,
     beam_altitude_angles: Vec<f64>,
     beam_azimuth_angles: Vec<f64>,
+    lidar_to_sensor_transform: Vec<f64>,
     max_range: f64,
 }
 
@@ -131,17 +132,40 @@ impl Scanner {
             .into_iter()
             .map(|v| v.as_f64().expect("should be a float"))
             .collect();
+        let lidar_to_sensor_transform = beam_intrinsics["lidar_to_sensor_transform"]
+            .as_array()
+            .expect("should be an array")
+            .into_iter()
+            .map(|v| v.as_f64().expect("should be a float"))
+            .collect();
         Ok(PointComputer {
             lidar_origin_to_beam_origin_mm,
             beam_altitude_angles,
             beam_azimuth_angles,
+            lidar_to_sensor_transform,
             max_range: MAX_RANGE,
         })
     }
 }
 
 impl PointComputer {
-    fn compute_points(&self, packet: Packet) -> Vec<Point> {
+    pub fn new(
+        lidar_origin_to_beam_origin_mm: f64,
+        beam_altitude_angles: Vec<f64>,
+        beam_azimuth_angles: Vec<f64>,
+        lidar_to_sensor_transform: Vec<f64>,
+        max_range: f64,
+    ) -> PointComputer {
+        PointComputer {
+            lidar_origin_to_beam_origin_mm,
+            beam_altitude_angles,
+            beam_azimuth_angles,
+            lidar_to_sensor_transform,
+            max_range,
+        }
+    }
+
+    pub fn compute_points(&self, packet: Packet) -> Vec<Point> {
         use std::f64::consts::PI;
 
         let mut points = Vec::new();
@@ -149,6 +173,7 @@ impl PointComputer {
         for measurement in packet.measurements {
             let encoder_count = f64::from(measurement.header.encoder_count);
             let theta_encoder = 2. * PI * (1. - (encoder_count / 90112.));
+            let time = measurement.header.timestamp as f64 / 1e9;
             for (i, data) in measurement.data.into_iter().enumerate() {
                 let range = f64::from(data.range) / 1000.;
                 if range > self.max_range {
@@ -162,7 +187,25 @@ impl PointComputer {
                 let y = (range - origin_offset) * theta.sin() * phi.cos()
                     + origin_offset * theta_encoder.sin();
                 let z = (range - origin_offset) * phi.sin();
-                points.push(Point { x, y, z })
+                let x = x * self.lidar_to_sensor_transform[0]
+                    + y * self.lidar_to_sensor_transform[1]
+                    + z * self.lidar_to_sensor_transform[2]
+                    + self.lidar_to_sensor_transform[3] / 1000.;
+                let y = x * self.lidar_to_sensor_transform[4]
+                    + y * self.lidar_to_sensor_transform[5]
+                    + z * self.lidar_to_sensor_transform[6]
+                    + self.lidar_to_sensor_transform[7] / 1000.;
+                let z = x * self.lidar_to_sensor_transform[8]
+                    + y * self.lidar_to_sensor_transform[9]
+                    + z * self.lidar_to_sensor_transform[10]
+                    + self.lidar_to_sensor_transform[11] / 1000.;
+                points.push(Point {
+                    x,
+                    y,
+                    z,
+                    reflectivity: data.reflectivity,
+                    time,
+                });
             }
         }
         points

@@ -2,7 +2,7 @@ use anyhow::{anyhow, Error};
 use regex::Regex;
 use std::{fmt, str::FromStr};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Product {
     generation: u8,
     channels: u16,

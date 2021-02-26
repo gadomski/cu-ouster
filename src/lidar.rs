@@ -18,6 +18,8 @@ pub struct Point {
     pub x: f64,
     pub y: f64,
     pub z: f64,
+    pub time: f64,
+    pub reflectivity: u16,
 }
 
 /// A lidar data packet.
@@ -52,8 +54,8 @@ pub struct Data {
     pub near_infrared_photons: u16,
 }
 
-#[derive(Debug)]
-struct LidarDecoder {
+#[derive(Debug, Clone, Copy)]
+pub struct LidarDecoder {
     product: Product,
 }
 
@@ -86,6 +88,10 @@ impl Listener {
 }
 
 impl LidarDecoder {
+    pub fn new(product: Product) -> LidarDecoder {
+        LidarDecoder { product }
+    }
+
     fn packet_len(&self) -> usize {
         self.product.measurement_block_len() * 16
     }
